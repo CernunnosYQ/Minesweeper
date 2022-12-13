@@ -18,8 +18,7 @@ class Board:
         self.board_logic = np.zeros((self.x, self.y))
 
         self.createMines()
-
-        print(self.mines_coords)
+        self.createHints()
 
     def createMines(self):
         rng = np.random.default_rng()
@@ -33,6 +32,28 @@ class Board:
         for mine in self.mines_coords:
             self.board_logic[mine[0]][mine[1]] = 9
 
+    def createHints(self):
+        for mine in self.mines_coords:
+            if mine[1] > 0:
+                self.board_logic[mine[0]][mine[1] - 1] += 1
+            if mine[1] < self.y-1:
+                self.board_logic[mine[0]][mine[1] + 1] += 1
+
+            if mine[0] > 0:
+                self.board_logic[mine[0]-1][mine[1]] += 1
+                if mine[1] > 0:
+                    self.board_logic[mine[0]-1][mine[1] - 1] += 1
+                if mine[1] < self.y-1:
+                    self.board_logic[mine[0]-1][mine[1] + 1] += 1
+
+            if mine[0] < self.x-1:
+                self.board_logic[mine[0]+1][mine[1]] += 1
+                if mine[1] > 0:
+                    self.board_logic[mine[0]+1][mine[1] - 1] += 1
+                if mine[1] < self.y-1:
+                    self.board_logic[mine[0]+1][mine[1] + 1] += 1
+
+
     def createBoardTk(self):
         self.board = tk.Frame(self.container)
         self.buttons = []
@@ -42,7 +63,11 @@ class Board:
 
         for y in range(self.y):
             for x in range(self.x):
-                self.buttons.append(Tile(self.board, self.board_logic[x][y],  x, y, self.callback))
+                self.buttons.append(
+                    Tile(
+                        self.board,
+                        self.board_logic[x][y] if self.board_logic[x][y] < 9 else 9,
+                        x, y, self.callback))
 
         self.board.pack(fill="both")
 

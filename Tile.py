@@ -14,6 +14,7 @@ class Tile:
         self.btn["state"] = "disabled"
         self.btn["relief"] = "groove"
         self.btn["text"] = self.value
+
         self.action(self.x, self.y)
         
 if __name__ == "__main__":
