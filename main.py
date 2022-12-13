@@ -29,21 +29,27 @@ class Board:
 
         for y in range(self.y):
             for x in range(self.x):
-                btn = tk.Button(self.board)
-                btn.grid(row=y, column=x, sticky="ew")
-
-                self.buttons.append(btn)
+                self.buttons.append(Tile(self.board, x, y, self.callback))
 
         self.board.pack(fill="both")
 
     def callback(self, x, y):
         print(x, y)
 
-    def getButton(self, x, y):
-        pass
 
-    def getBoard(self):
-        pass
+class Tile:
+    def __init__(self, container, x, y, action):
+        self.container = container
+        self.x, self.y = x, y
+        self.action = action
+
+        self.btn = tk.Button(container, command=self.callback)
+        self.btn.grid(row=y, column=x, sticky="news")
+
+    def callback(self):
+        self.btn["state"] = "disabled"
+        self.btn["relief"] = "groove"
+        self.action(self.x, self.y)
 
 
 if __name__ == "__main__":
