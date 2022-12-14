@@ -23,11 +23,13 @@ class Board:
     def createMines(self):
         rng = np.random.default_rng()
         self.mines_coords = np.array([
-            rng.integers(low=0, high=self.x, size=self.mines), 
-            rng.integers(low=0, high=self.x, size=self.mines)
+            rng.integers(low=0, high=self.x, size=self.mines),
+            rng.integers(low=0, high=self.y, size=self.mines)
         ])
 
         self.mines_coords = self.mines_coords.T
+
+        print(self.mines_coords)
 
         for mine in self.mines_coords:
             self.board_logic[mine[0]][mine[1]] = 9
@@ -53,7 +55,6 @@ class Board:
                 if mine[1] < self.y-1:
                     self.board_logic[mine[0]+1][mine[1] + 1] += 1
 
-
     def createBoardTk(self):
         self.board = tk.Frame(self.container)
         self.buttons = []
@@ -72,7 +73,10 @@ class Board:
         self.board.pack(fill="both")
 
     def callback(self, x, y):
-        print(x, y)
+        for coord in self.mines_coords:
+            c = np.array([x, y])
+            if (c == coord).all():
+                print("Boom!")
 
 
 if __name__ == "__main__":
