@@ -2,6 +2,7 @@ import tkinter as tk
 import numpy as np
 
 from Tile import Tile
+from Utilities import *
 
 
 class Board:
@@ -29,24 +30,10 @@ class Board:
 
     def createHints(self):
         for mine in self.mines_coords:
-            if mine[1] > 0:
-                self.board_logic[mine[0]][mine[1] - 1] += 1
-            if mine[1] < self.y-1:
-                self.board_logic[mine[0]][mine[1] + 1] += 1
-
-            if mine[0] > 0:
-                self.board_logic[mine[0]-1][mine[1]] += 1
-                if mine[1] > 0:
-                    self.board_logic[mine[0]-1][mine[1] - 1] += 1
-                if mine[1] < self.y-1:
-                    self.board_logic[mine[0]-1][mine[1] + 1] += 1
-
-            if mine[0] < self.x-1:
-                self.board_logic[mine[0]+1][mine[1]] += 1
-                if mine[1] > 0:
-                    self.board_logic[mine[0]+1][mine[1] - 1] += 1
-                if mine[1] < self.y-1:
-                    self.board_logic[mine[0]+1][mine[1] + 1] += 1
+            neighbors = getNeighbors(mine, self.x, self.y)
+            print(neighbors)
+            for n in neighbors: 
+                self.board_logic[n[0]][n[1]] += 1
 
     def createBoardTk(self):
         self.board = tk.Frame(self.container)
@@ -71,20 +58,10 @@ class Board:
             if (c == coord).all():
                 print("Boom!")
 
-def getMines(quantity, max_x, max_y):
-    if quantity > max_x * max_y:
-        return []
-    
-    max_index = max_x * max_y
-    rng = np.random.default_rng()
-    
-    numbers = rng.integers(low=0, high=max_index, size=quantity*2)
-
-    existent = set()
-    uniques = [n for n in numbers if n not in existent or (existent.add(n) or False)]
-    uniques = uniques[:quantity]
-
-    return list(map(lambda c: [c % max_x, c // max_x], uniques))
+        if self.board_logic[x][y] == 0:
+            self.board_logic[x][y] -= 1
+            for n in getNeighbors([x, y], self.x, self.y):
+                self.buttons[n[1] * self.x + n[0]].btn.invoke()
 
 
 if __name__ == "__main__":
