@@ -21,14 +21,7 @@ class Board:
         self.createHints()
 
     def createMines(self):
-        rng = np.random.default_rng()
-        self.mines_coords = np.array([
-            rng.integers(low=0, high=self.x, size=self.mines),
-            rng.integers(low=0, high=self.y, size=self.mines)
-        ])
-
-        self.mines_coords = self.mines_coords.T
-
+        self.mines_coords = getMines(self.mines, self.x, self.y)
         print(self.mines_coords)
 
         for mine in self.mines_coords:
@@ -77,6 +70,21 @@ class Board:
             c = np.array([x, y])
             if (c == coord).all():
                 print("Boom!")
+
+def getMines(quantity, max_x, max_y):
+    if quantity > max_x * max_y:
+        return []
+    
+    max_index = max_x * max_y
+    rng = np.random.default_rng()
+    
+    numbers = rng.integers(low=0, high=max_index, size=quantity*2)
+
+    existent = set()
+    uniques = [n for n in numbers if n not in existent or (existent.add(n) or False)]
+    uniques = uniques[:quantity]
+
+    return list(map(lambda c: [c % max_x, c // max_x], uniques))
 
 
 if __name__ == "__main__":
