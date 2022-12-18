@@ -1,6 +1,6 @@
 import numpy as np
 
-def getMines(quantity, max_x, max_y):
+def getRandom(quantity, max_x, max_y):
     if quantity > max_x * max_y:
         return []
     
