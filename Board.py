@@ -6,11 +6,12 @@ from Utilities import *
 
 
 class Board:
-    def __init__(self, container, x, y, mines):
+    def __init__(self, container, x, y, mines, scoreCallback):
         self.container = container
         self.max_x = x
         self.max_y = y
         self.mines = mines
+        self.scoreCallback = scoreCallback
 
         self.createBoardLogic()
         self.createBoardTk()
@@ -55,7 +56,10 @@ class Board:
             for n in getNeighbors([x, y], self.max_x, self.max_y):
                 self.buttons[n[1] * self.max_x + n[0]].btn.invoke()
         if action == 'boom':
-            print("Boom!")
+            for m in self.mines_coords:
+                self.buttons[m[1] * self.max_x + m[0]].btn.invoke()
+        if action == 'flag':
+            self.scoreCallback("decrease")
 
 
 if __name__ == "__main__":

@@ -16,10 +16,10 @@ class Tile:
         self.x, self.y = x, y
         self.callback = callback
 
-        self.btn = tk.Button(container, text="  ",
-                             command=self.click, width=10)
+        self.btn = tk.Button(container, text="  ", command=self.click, width=10, fg="white")
         self.btn.bind("<Button-3>", self.rClick)
         self.btn.grid(row=y, column=x, sticky="news")
+
 
     def click(self):
         if self.state == 0:
@@ -49,7 +49,8 @@ class Tile:
             self.state = (self.state+1) % 3
             self.btn["text"] = STATES[self.state]
             self.btn["background"] = BACKGROUNDS[self.state]
-            if self.state == 1: self.btn["foreground"] = "white"
+
+            if self.state == 1: self.callback("flag", self.x, self.y)
         
 if __name__ == "__main__":
     print("This is not a main module")
